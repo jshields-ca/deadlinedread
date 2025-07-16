@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deadline Dread - Prototype V1.6.2</title>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+    <h1>Deadline Dread - Prototype V1.6.2</h1>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="startScreen" class="overlay">
+             <div class="overlay-content">
+                <h2>Welcome, Developer!</h2>
+                <p>A nightmare unfolds. Survive the onslaught of... 'features'!</p>
+                <p>Use <strong>W, A, S, D</strong> keys to move. You auto-attack.</p>
+                <button id="startButton">Start Surviving</button>
+            </div>
+        </div>
+        <div id="gameOverScreen" class="overlay" style="display: none;">
+            <div class="overlay-content">
+                <h2>Issue Unresolved!</h2>
+                <p>You've been overwhelmed by the backlog.</p>
+                <p>Time Survived: <span id="timeSurvived">00:00</span></p>
+                <p>Level Reached: <span id="levelReachedDisplay">1</span></p>
+                <button id="restartButton">Try Again?</button>
+            </div>
+        </div>
+        <div id="levelUpScreen" class="overlay" style="display: none;">
+            <div class="overlay-content">
+                <h2>Level Up! Choose an Upgrade:</h2>
+                <div id="upgradeOptionsContainer">
+                    <!-- Upgrade buttons will be dynamically added here by JS -->
+                </div>
+            </div>
+        </div>
+        <div id="hud">
+            <div>Health: <span id="playerHealth">100</span></div>
+            <div>Time: <span id="gameTimer">00:00</span></div>
+            <div>Level: <span id="playerLevel">1</span></div>
+            <div>XP: <div id="xpBarContainer"><div id="xpBar"></div></div></div>
+        </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
