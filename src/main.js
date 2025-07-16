@@ -77,8 +77,8 @@ class Weapon {
 
 // --- Homing Weapon ---
 class HomingWeapon extends Weapon {
-    constructor(player) {
-        super(player, 'HomingWeaponStats');
+    constructor(player, weaponKey = 'homing') {
+        super(player, weaponKey);
     }
 
     update(currentTime, enemies) { 
@@ -118,8 +118,8 @@ class HomingWeapon extends Weapon {
 
 // --- Orbiting Weapon ---
 class OrbitingWeapon extends Weapon {
-    constructor(player) {
-        super(player, 'OrbitingWeaponStats');
+    constructor(player, weaponKey = 'orbiting') {
+        super(player, weaponKey);
         this.angle = 0;
         this.orbs = []; 
         this.lastHitTimes = new Map(); 
@@ -182,8 +182,8 @@ class OrbitingWeapon extends Weapon {
 
 // --- Pulse Weapon ---
 class PulseWeapon extends Weapon {
-    constructor(player) {
-        super(player, 'PulseWeaponStats');
+    constructor(player, weaponKey = 'pulse') {
+        super(player, weaponKey);
         this.isPulsing = false;
         this.pulseStartTime = 0;
         this.currentPulseVisualRadius = 0; 
@@ -362,10 +362,19 @@ class Player {
     }
 
     addWeapon(WeaponConstructor) { 
-        const weaponKey = WeaponConstructor.name + "Stats"; 
-        
+        let weaponKey;
+        if (WeaponConstructor === HomingWeapon) {
+            weaponKey = 'homing';
+        } else if (WeaponConstructor === OrbitingWeapon) {
+            weaponKey = 'orbiting';
+        } else if (WeaponConstructor === PulseWeapon) {
+            weaponKey = 'pulse';
+        } else {
+            weaponKey = WeaponConstructor.name;
+        }
+
         if (!this.weaponStats[weaponKey]) { 
-            this.activeWeapons.push(new WeaponConstructor(this));
+            this.activeWeapons.push(new WeaponConstructor(this, weaponKey));
             if (WeaponConstructor === HomingWeapon) {
                 this.weaponStats[weaponKey] = { level: 1, projectileCount: 1, damageMultiplier: 1, attackSpeedMultiplier: 1, projectileSpeedMultiplier: 1 };
             } else if (WeaponConstructor === OrbitingWeapon) {
@@ -373,11 +382,11 @@ class Player {
             } else if (WeaponConstructor === PulseWeapon) {
                 this.weaponStats[weaponKey] = { level: 1, damageMultiplier: 1, radiusMultiplier: 1, cooldownMultiplier: 1 };
             }
-            console.log(`${WeaponConstructor.name} added with stats:`, this.weaponStats[weaponKey]);
+            console.log(`${weaponKey} added with stats:`, this.weaponStats[weaponKey]);
         } else {
             // This case should ideally not be hit if "unique: true" for "get_weapon" upgrades works.
             this.weaponStats[weaponKey].level = (this.weaponStats[weaponKey].level || 0) + 1;
-            console.warn(`${WeaponConstructor.name} already exists, level incremented via addWeapon. This might indicate an issue with 'unique' upgrade logic. Level: ${this.weaponStats[weaponKey].level}`);
+            console.warn(`${weaponKey} already exists, level incremented via addWeapon. This might indicate an issue with 'unique' upgrade logic. Level: ${this.weaponStats[weaponKey].level}`);
         }
     }
 }
@@ -494,23 +503,23 @@ function defineBaseUpgrades() {
 
         { id: 'homing_add_projectile', name: '+1 Homing Bolt', description: `Fire an additional homing bolt (Max ${typeof MAX_HOMING_PROJECTILES !== 'undefined' ? MAX_HOMING_PROJECTILES : 8})`, 
           requiresWeapon: HomingWeapon, 
-          isMaxed: (p) => p.weaponStats.HomingWeaponStats && p.weaponStats.HomingWeaponStats.projectileCount >= (typeof MAX_HOMING_PROJECTILES !== 'undefined' ? MAX_HOMING_PROJECTILES : 8),
-          apply: (p) => { if(p.weaponStats.HomingWeaponStats) p.weaponStats.HomingWeaponStats.projectileCount++; } },
-        { id: 'homing_damage_up', name: 'Sharper Bolts', description: '+10% Homing Damage', requiresWeapon: HomingWeapon, apply: (p) => { if(p.weaponStats.HomingWeaponStats) p.weaponStats.HomingWeaponStats.damageMultiplier *= 1.1; } },
-        { id: 'homing_attack_speed_up', name: 'Faster Homing Fire', description: '-10% Homing Cooldown', requiresWeapon: HomingWeapon, apply: (p) => { if(p.weaponStats.HomingWeaponStats) p.weaponStats.HomingWeaponStats.attackSpeedMultiplier *= 0.9; } },
-        { id: 'homing_projectile_speed_up', name: 'Swifter Bolts', description: '+10% Homing Bolt Speed', requiresWeapon: HomingWeapon, apply: (p) => { if(p.weaponStats.HomingWeaponStats) p.weaponStats.HomingWeaponStats.projectileSpeedMultiplier *= 1.1; } },
+          isMaxed: (p) => p.weaponStats.homing && p.weaponStats.homing.projectileCount >= (typeof MAX_HOMING_PROJECTILES !== 'undefined' ? MAX_HOMING_PROJECTILES : 8),
+          apply: (p) => { if(p.weaponStats.homing) p.weaponStats.homing.projectileCount++; } },
+        { id: 'homing_damage_up', name: 'Sharper Bolts', description: '+10% Homing Damage', requiresWeapon: HomingWeapon, apply: (p) => { if(p.weaponStats.homing) p.weaponStats.homing.damageMultiplier *= 1.1; } },
+        { id: 'homing_attack_speed_up', name: 'Faster Homing Fire', description: '-10% Homing Cooldown', requiresWeapon: HomingWeapon, apply: (p) => { if(p.weaponStats.homing) p.weaponStats.homing.attackSpeedMultiplier *= 0.9; } },
+        { id: 'homing_projectile_speed_up', name: 'Swifter Bolts', description: '+10% Homing Bolt Speed', requiresWeapon: HomingWeapon, apply: (p) => { if(p.weaponStats.homing) p.weaponStats.homing.projectileSpeedMultiplier *= 1.1; } },
 
         { id: 'shield_add_orb', name: 'Add Flex Item', description: `+1 Shield Orb (Max ${typeof MAX_SHIELD_ORBS !== 'undefined' ? MAX_SHIELD_ORBS : 6})`, 
           requiresWeapon: OrbitingWeapon, 
-          isMaxed: (p) => p.weaponStats.OrbitingWeaponStats && p.weaponStats.OrbitingWeaponStats.orbCount >= (typeof MAX_SHIELD_ORBS !== 'undefined' ? MAX_SHIELD_ORBS : 6),
-          apply: (p) => { if(p.weaponStats.OrbitingWeaponStats) p.weaponStats.OrbitingWeaponStats.orbCount++; } },
-        { id: 'shield_damage_up', name: 'Hardened Shields', description: '+20% Shield Damage', requiresWeapon: OrbitingWeapon, apply: (p) => { if(p.weaponStats.OrbitingWeaponStats) p.weaponStats.OrbitingWeaponStats.damageMultiplier *= 1.2; } },
-        { id: 'shield_orbit_radius_up', name: 'Wider Perimeter', description: '+10% Shield Orbit Radius', requiresWeapon: OrbitingWeapon, apply: (p) => { if(p.weaponStats.OrbitingWeaponStats) p.weaponStats.OrbitingWeaponStats.orbitRadiusMultiplier *= 1.1; } },
-        { id: 'shield_orbit_speed_up', name: 'Faster Rotation', description: '+15% Shield Orbit Speed', requiresWeapon: OrbitingWeapon, apply: (p) => { if(p.weaponStats.OrbitingWeaponStats) p.weaponStats.OrbitingWeaponStats.orbitSpeedMultiplier *= 1.15; } },
+          isMaxed: (p) => p.weaponStats.orbiting && p.weaponStats.orbiting.orbCount >= (typeof MAX_SHIELD_ORBS !== 'undefined' ? MAX_SHIELD_ORBS : 6),
+          apply: (p) => { if(p.weaponStats.orbiting) p.weaponStats.orbiting.orbCount++; } },
+        { id: 'shield_damage_up', name: 'Hardened Shields', description: '+20% Shield Damage', requiresWeapon: OrbitingWeapon, apply: (p) => { if(p.weaponStats.orbiting) p.weaponStats.orbiting.damageMultiplier *= 1.2; } },
+        { id: 'shield_orbit_radius_up', name: 'Wider Perimeter', description: '+10% Shield Orbit Radius', requiresWeapon: OrbitingWeapon, apply: (p) => { if(p.weaponStats.orbiting) p.weaponStats.orbiting.orbitRadiusMultiplier *= 1.1; } },
+        { id: 'shield_orbit_speed_up', name: 'Faster Rotation', description: '+15% Shield Orbit Speed', requiresWeapon: OrbitingWeapon, apply: (p) => { if(p.weaponStats.orbiting) p.weaponStats.orbiting.orbitSpeedMultiplier *= 1.15; } },
 
-        { id: 'pulse_damage_up', name: 'Stronger Linter', description: '+20% Pulse Damage', requiresWeapon: PulseWeapon, apply: (p) => { if(p.weaponStats.PulseWeaponStats) p.weaponStats.PulseWeaponStats.damageMultiplier *= 1.20; } },
-        { id: 'pulse_radius_up', name: 'Wider Linting Scope', description: '+15% Pulse Radius', requiresWeapon: PulseWeapon, apply: (p) => { if(p.weaponStats.PulseWeaponStats) p.weaponStats.PulseWeaponStats.radiusMultiplier *= 1.15; } },
-        { id: 'pulse_cooldown_down', name: 'Faster Linting', description: '-10% Pulse Cooldown', requiresWeapon: PulseWeapon, apply: (p) => { if(p.weaponStats.PulseWeaponStats) p.weaponStats.PulseWeaponStats.cooldownMultiplier *= 0.90; } }
+        { id: 'pulse_damage_up', name: 'Stronger Linter', description: '+20% Pulse Damage', requiresWeapon: PulseWeapon, apply: (p) => { if(p.weaponStats.pulse) p.weaponStats.pulse.damageMultiplier *= 1.20; } },
+        { id: 'pulse_radius_up', name: 'Wider Linting Scope', description: '+15% Pulse Radius', requiresWeapon: PulseWeapon, apply: (p) => { if(p.weaponStats.pulse) p.weaponStats.pulse.radiusMultiplier *= 1.15; } },
+        { id: 'pulse_cooldown_down', name: 'Faster Linting', description: '-10% Pulse Cooldown', requiresWeapon: PulseWeapon, apply: (p) => { if(p.weaponStats.pulse) p.weaponStats.pulse.cooldownMultiplier *= 0.90; } }
     ];
 }
 
