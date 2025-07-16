@@ -287,7 +287,8 @@ class Player {
         
         this.weaponStats = {};
         this.activeWeapons = [];
-        this.addWeapon(HomingWeapon); 
+        this.addWeapon(HomingWeapon);
+        console.log('Player weapons at start:', this.activeWeapons);
     }
 
     draw() { 
@@ -753,6 +754,7 @@ function gameLoop(currentTime) {
     if (player) { 
         player.update(currentTime); 
         player.draw(); 
+        console.log('Weapons this frame:', player.activeWeapons);
         player.activeWeapons.forEach(w => w.draw(ctx)); 
     }
     enemies.forEach(enemy => { if (player) enemy.update(player); enemy.draw(); });
