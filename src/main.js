@@ -1,5 +1,5 @@
 console.log('HELLO FROM LIVE BUILD', new Date().toISOString());
-// Deadline Dread - Game Prototype V1.7.2
+// Deadline Dread - Game Prototype V1.7.3
 // Modularized version
 
 import Player from './player.js';
