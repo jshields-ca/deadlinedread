@@ -1,5 +1,9 @@
 # Deadline Dread Changelog
 
+## [1.7.4] - 2024-07-17
+### Changed
+- UI update: Only 'Deadline Dread' at the top. Version, status, and links to GitHub and scootr.ca now appear in a smaller footer below the game.
+
 ## [1.7.3] - 2024-07-17
 ### Fixed
 - Player is now clamped to the visible game area and cannot move outside the screen.
