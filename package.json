@@ -9,6 +9,18 @@
     "preview": "vite preview",
     "release": "release-it"
   },
+  "release-it": {
+    "github": {
+      "release": true,
+      "tokenRef": "GITHUB_TOKEN"
+    },
+    "git": {
+      "requireCleanWorkingDir": true,
+      "requireUpstream": true,
+      "commitMessage": "Release ${version}",
+      "tagName": "${version}"
+    }
+  },
   "devDependencies": {
     "release-it": "^19.0.4",
     "vite": "^7.0.4"

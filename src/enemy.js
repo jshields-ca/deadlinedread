@@ -176,11 +176,13 @@ function spawnEnemy(enemies, elapsedGameTime, canvas, player) {
     let spawnX, spawnY;
     const edge = Math.floor(Math.random() * 4);
     const effectiveEnemyBaseSize = ENEMY_BASE_SIZE_DEFAULT;
+    let tempEnemy = new Enemy(0, 0); // Use default size for offset
+    let offset = tempEnemy.radius + 2; // Just outside the edge
     switch (edge) {
-        case 0: spawnX = Math.random() * canvas.width; spawnY = -effectiveEnemyBaseSize * 1.5; break;
-        case 1: spawnX = Math.random() * canvas.width; spawnY = canvas.height + effectiveEnemyBaseSize * 1.5; break;
-        case 2: spawnX = -effectiveEnemyBaseSize * 1.5; spawnY = Math.random() * canvas.height; break;
-        case 3: spawnX = canvas.width + effectiveEnemyBaseSize * 1.5; spawnY = Math.random() * canvas.height; break;
+        case 0: spawnX = Math.random() * canvas.width; spawnY = -offset; break; // Top
+        case 1: spawnX = Math.random() * canvas.width; spawnY = canvas.height + offset; break; // Bottom
+        case 2: spawnX = -offset; spawnY = Math.random() * canvas.height; break; // Left
+        case 3: spawnX = canvas.width + offset; spawnY = Math.random() * canvas.height; break; // Right
     }
     const rand = Math.random();
     let typeToSpawn;

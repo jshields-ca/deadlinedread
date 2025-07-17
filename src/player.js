@@ -50,6 +50,15 @@ class Player {
             this.y += (moveY / magnitude) * currentSpeed;
             this.lastMoveAngle = Math.atan2(moveY, moveX);
         }
+        // Clamp player position to visible canvas area
+        if (typeof window !== 'undefined' && window.canvas) {
+            const minX = this.radius;
+            const maxX = window.canvas.width - this.radius;
+            const minY = this.radius;
+            const maxY = window.canvas.height - this.radius;
+            this.x = Math.max(minX, Math.min(maxX, this.x));
+            this.y = Math.max(minY, Math.min(maxY, this.y));
+        }
         this.activeWeapons.forEach(weapon => weapon.update(currentTime, enemies));
         if (playerHealthDisplay) playerHealthDisplay.textContent = `${Math.max(0, Math.ceil(this.health))} / ${Math.ceil(this.maxHealth)}`;
     }
