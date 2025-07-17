@@ -12,6 +12,7 @@ class Weapon {
 }
 
 class HomingWeapon extends Weapon {
+    static weaponKey = 'homing';
     constructor(player, weaponKey = 'homing') {
         super(player, weaponKey);
     }
@@ -51,6 +52,7 @@ class HomingWeapon extends Weapon {
 }
 
 class OrbitingWeapon extends Weapon {
+    static weaponKey = 'orbiting';
     constructor(player, weaponKey = 'orbiting') {
         super(player, weaponKey);
         this.angle = 0;
@@ -111,6 +113,7 @@ class OrbitingWeapon extends Weapon {
 }
 
 class PulseWeapon extends Weapon {
+    static weaponKey = 'pulse';
     constructor(player, weaponKey = 'pulse') {
         super(player, weaponKey);
         this.isPulsing = false;
@@ -177,6 +180,7 @@ class PulseWeapon extends Weapon {
 }
 
 class CodeSprayWeapon extends Weapon {
+    static weaponKey = 'codespray';
     constructor(player, weaponKey = 'codespray') {
         super(player, weaponKey);
     }

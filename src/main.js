@@ -1,4 +1,5 @@
-// Deadline Dread - Game Prototype V1.7.0
+console.log('HELLO FROM LIVE BUILD', new Date().toISOString());
+// Deadline Dread - Game Prototype V1.7.2
 // Modularized version
 
 import Player from './player.js';
@@ -66,12 +67,13 @@ function initializeGame() {
         xpOrbs.push(new XPOrb(x, y, radius, color, value));
     };
     player.addWeapon(HomingWeapon);
-    player.weaponStats['homing'] = { level: 1, projectileCount: 1, damageMultiplier: 1, attackSpeedMultiplier: 1, projectileSpeedMultiplier: 1 };
-    player.levelUpCallback = () => setGameState('levelup');
-    // --- Add: update level display on level up ---
-    player.onLevelUp = function() {
-        playerLevelDisplay.textContent = player.level;
-    };
+    player.weaponStats[HomingWeapon.weaponKey] = { level: 1, projectileCount: 1, damageMultiplier: 1, attackSpeedMultiplier: 1, projectileSpeedMultiplier: 1 };
+    // Add default stats for all other weapons (locked at start, but stats present)
+    player.weaponStats[OrbitingWeapon.weaponKey] = { level: 0, orbCount: 0, damageMultiplier: 1, orbitSpeedMultiplier: 1, orbitRadiusMultiplier: 1 };
+    player.weaponStats[PulseWeapon.weaponKey] = { level: 0, damageMultiplier: 1, cooldownMultiplier: 1, radiusMultiplier: 1 };
+    player.weaponStats[CodeSprayWeapon.weaponKey] = { level: 0, projectileCount: 6, damageMultiplier: 1, cooldown: 1000, projectileRange: 150, spread: 45, doubleBarrel: false };
+    // Remove any rogue single-letter keys
+    Object.keys(player.weaponStats).forEach(k => { if (k.length === 1) delete player.weaponStats[k]; });
 }
 
 function handleCollisions() {
@@ -134,14 +136,9 @@ function displayLevelUpOptions() {
     // --- Fix: Weapon upgrades filter logic ---
     let possibleUpgrades = baseAvailableUpgrades.filter(upgrade => {
         if (!player || !player.weaponStats) return false;
-        // For weapon upgrades, use the correct key (e.g., 'codespray', 'homing', etc.)
         let weaponKey = null;
-        if (upgrade.requiresWeapon) {
-            if (upgrade.requiresWeapon.name === 'HomingWeapon') weaponKey = 'homing';
-            else if (upgrade.requiresWeapon.name === 'OrbitingWeapon') weaponKey = 'orbiting';
-            else if (upgrade.requiresWeapon.name === 'PulseWeapon') weaponKey = 'pulse';
-            else if (upgrade.requiresWeapon.name === 'CodeSprayWeapon') weaponKey = 'codespray';
-            else weaponKey = upgrade.requiresWeapon.name.toLowerCase();
+        if (upgrade.requiresWeapon && upgrade.requiresWeapon.weaponKey) {
+            weaponKey = upgrade.requiresWeapon.weaponKey;
         }
         const weaponStats = weaponKey ? player.weaponStats[weaponKey] : null;
         if (upgrade.unique) {
@@ -152,7 +149,8 @@ function displayLevelUpOptions() {
             const weaponExists = player.activeWeapons.some(w => w instanceof upgrade.weaponClass);
             if (weaponExists) return false;
         }
-        if (upgrade.requiresWeapon && !weaponStats) {
+        // Only allow upgrades for weapons the player has unlocked (level > 0)
+        if (upgrade.requiresWeapon && (!weaponStats || weaponStats.level < 1)) {
             return false;
         }
         if (typeof upgrade.isMaxed === 'function' && upgrade.isMaxed(player)) {
@@ -161,16 +159,17 @@ function displayLevelUpOptions() {
         return true;
     });
     possibleUpgrades.sort(() => 0.5 - Math.random());
-    // Pick up to 3 unique upgrades by id
+    // Filter to unique upgrades by id
+    const uniqueUpgrades = [];
     const seenIds = new Set();
-    choices = [];
     for (const upgrade of possibleUpgrades) {
         if (!seenIds.has(upgrade.id)) {
-            choices.push(upgrade);
+            uniqueUpgrades.push(upgrade);
             seenIds.add(upgrade.id);
         }
-        if (choices.length >= 3) break;
     }
+    // Pick up to 3 unique upgrades
+    choices = uniqueUpgrades.slice(0, 3);
     if (choices.length === 0) {
         console.warn("No specific upgrades available after filtering. Offering fallback.");
         let fallbackUpgrade = baseAvailableUpgrades.find(u => u.id === 'hp_up');

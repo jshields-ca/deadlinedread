@@ -86,23 +86,35 @@ class Player {
         // This should be handled in main.js with DOM
     }
     addWeapon(WeaponConstructor) { 
-        let weaponKey;
-        if (WeaponConstructor.name === 'HomingWeapon') {
-            weaponKey = 'homing';
-        } else if (WeaponConstructor.name === 'OrbitingWeapon') {
-            weaponKey = 'orbiting';
-        } else if (WeaponConstructor.name === 'PulseWeapon') {
-            weaponKey = 'pulse';
-        } else if (WeaponConstructor.name === 'CodeSprayWeapon') {
-            weaponKey = 'codespray';
-        } else {
-            weaponKey = WeaponConstructor.name;
+        if (typeof WeaponConstructor !== 'function') {
+            console.error('addWeapon called with non-constructor:', WeaponConstructor);
+            return;
         }
-        if (!this.weaponStats[weaponKey]) { 
+        let weaponKey = WeaponConstructor.weaponKey;
+        if (!weaponKey) {
+            console.error('WeaponConstructor missing static weaponKey:', WeaponConstructor);
+            return;
+        }
+        // Ensure weaponStats entry exists with sensible defaults
+        if (!this.weaponStats[weaponKey]) {
+            if (weaponKey === 'homing') {
+                this.weaponStats[weaponKey] = { level: 0, projectileCount: 1, damageMultiplier: 1, attackSpeedMultiplier: 1, projectileSpeedMultiplier: 1 };
+            } else if (weaponKey === 'orbiting') {
+                this.weaponStats[weaponKey] = { level: 0, orbCount: 0, damageMultiplier: 1, orbitSpeedMultiplier: 1, orbitRadiusMultiplier: 1 };
+            } else if (weaponKey === 'pulse') {
+                this.weaponStats[weaponKey] = { level: 0, damageMultiplier: 1, cooldownMultiplier: 1, radiusMultiplier: 1 };
+            } else if (weaponKey === 'codespray') {
+                this.weaponStats[weaponKey] = { level: 0, projectileCount: 6, damageMultiplier: 1, cooldown: 1000, projectileRange: 150, spread: 45, doubleBarrel: false };
+            } else {
+                this.weaponStats[weaponKey] = { level: 0 };
+            }
+        }
+        // If weapon is not active, add it
+        if (!this.activeWeapons.some(w => w.weaponKey === weaponKey)) { 
             this.activeWeapons.push(new WeaponConstructor(this, weaponKey));
-        } else {
-            this.weaponStats[weaponKey].level = (this.weaponStats[weaponKey].level || 0) + 1;
         }
+        // Always increment level
+        this.weaponStats[weaponKey].level = (this.weaponStats[weaponKey].level || 0) + 1;
     }
 }
 
