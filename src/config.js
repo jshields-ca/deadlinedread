@@ -1,0 +1,30 @@
+// config.js - Game constants for Deadline Dread
+
+export const PLAYER_BASE_SPEED = 2.5;
+export const ENEMY_BASE_SPEED_DEFAULT = 1;
+export const ENEMY_SPAWN_INTERVAL = 1000;
+export const INITIAL_PLAYER_HEALTH = 100;
+export const PLAYER_SIZE = 20;
+export const ENEMY_BASE_SIZE_DEFAULT = 18;
+export const XP_ORB_SIZE = 5;
+export const XP_ORB_BASE_VALUE = 30;
+export const XP_PER_LEVEL_BASE = 90;
+export const ENEMY_DAMAGE_TO_PLAYER = 10;
+export const BASE_ENEMY_HEALTH_DEFAULT = 20;
+export const PROJECTILE_BASE_SIZE = 5;
+export const PROJECTILE_BASE_SPEED = 5;
+export const PROJECTILE_BASE_DAMAGE = 10;
+export const HOMING_BASE_COOLDOWN = 500;
+export const MAX_HOMING_PROJECTILES = 8;
+export const HOMING_PROJECTILE_SPREAD_ANGLE = Math.PI / 18;
+export const SHIELD_BASE_ORB_COUNT = 1;
+export const SHIELD_BASE_ORBIT_RADIUS = 50;
+export const SHIELD_BASE_ORBIT_SPEED = 0.05;
+export const SHIELD_BASE_DAMAGE = 15;
+export const SHIELD_ORB_SIZE = 8;
+export const SHIELD_HIT_COOLDOWN = 500;
+export const MAX_SHIELD_ORBS = 6;
+export const PULSE_BASE_MAX_RADIUS = 75;
+export const PULSE_BASE_DAMAGE = 25;
+export const PULSE_BASE_COOLDOWN = 3000;
+export const PULSE_DURATION = 300; 
