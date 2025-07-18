@@ -1,5 +1,11 @@
 # Deadline Dread Changelog
 
+## [3.0.0-prototype] - 2024-07-18
+### Changed
+- Reset all previous tags and releases to start fresh with a new prototype versioning scheme.
+- Improved and stabilized the release workflow and documentation sync scripts for a clean, reliable release process.
+- This release marks a new baseline for future development and testing.
+
 ## [2.0.9] - 2024-07-18
 ### Changed
 - Further improvements to the release workflow and documentation sync scripts to avoid versioning and release issues on all platforms.
