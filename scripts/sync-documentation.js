@@ -10,7 +10,6 @@ const __dirname = path.dirname(__filename);
 console.log('📚 Deadline Dread - Documentation Sync Helper');
 console.log('=============================================');
 
-// Check if key files exist and are up to date
 const filesToCheck = [
   { path: 'README.md', description: 'Project README' },
   { path: 'CHANGELOG.md', description: 'Release changelog' },
@@ -37,50 +36,77 @@ if (missingFiles) {
   process.exit(1);
 }
 
-// Check version consistency
-try {
-  const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
-  const readmeContent = fs.readFileSync(path.join(__dirname, '..', 'README.md'), 'utf8');
-  const indexContent = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
-  const changelogContent = fs.readFileSync(path.join(__dirname, '..', 'CHANGELOG.md'), 'utf8');
+// --- Version Sync Logic ---
+const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+const packageVersion = packageJson.version;
+let updated = false;
 
-  const packageVersion = packageJson.version;
-  const readmeVersionMatch = readmeContent.match(/version-([^-]+)-green/);
-  const readmeVersion = readmeVersionMatch ? readmeVersionMatch[1] : 'NOT_FOUND';
-  const indexTitleMatch = indexContent.match(/Prototype V([\d.]+)/i);
-  const indexFooterMatch = indexContent.match(/Prototype Version ([\d.]+)/i);
-  const indexVersion = indexTitleMatch ? indexTitleMatch[1] : (indexFooterMatch ? indexFooterMatch[1] : 'NOT_FOUND');
-  const changelogVersionMatch = changelogContent.match(/## \[([\d.]+)\]/);
-  const changelogVersion = changelogVersionMatch ? changelogVersionMatch[1] : 'NOT_FOUND';
-
-  let allMatch = true;
-  console.log('\n🔢 Version Check:');
-  console.log(`📦 package.json version: ${packageVersion}`);
-  console.log(`📖 README.md version: ${readmeVersion}`);
-  console.log(`📝 index.html version: ${indexVersion}`);
-  console.log(`🗒️  CHANGELOG.md version: ${changelogVersion}`);
-
-  if (packageVersion !== readmeVersion) {
-    console.error(`❌ README.md version (${readmeVersion}) does not match package.json (${packageVersion})`);
-    allMatch = false;
+// --- README.md ---
+const readmePath = path.join(__dirname, '..', 'README.md');
+let readmeContent = fs.readFileSync(readmePath, 'utf8');
+const readmeVersionMatch = readmeContent.match(/version-([^-]+)-green/);
+const readmeVersion = readmeVersionMatch ? readmeVersionMatch[1] : 'NOT_FOUND';
+if (readmeVersion !== packageVersion) {
+  readmeContent = readmeContent.replace(/version-[^-]+-green/g, `version-${packageVersion}-green`);
+  // Update version history
+  const versionHistoryRegex = /(## 📈 Version History\n)([\s\S]*?)(- \*\*\d+\.\d+\.\d+\*\*|$)/;
+  if (!readmeContent.includes(`**${packageVersion}**`)) {
+    readmeContent = readmeContent.replace(
+      /(## 📈 Version History\n)/,
+      `$1- **${packageVersion}** - _Describe this release here_\n`
+    );
   }
-  if (packageVersion !== indexVersion) {
-    console.error(`❌ index.html version (${indexVersion}) does not match package.json (${packageVersion})`);
-    allMatch = false;
-  }
-  if (packageVersion !== changelogVersion) {
-    console.error(`❌ CHANGELOG.md version (${changelogVersion}) does not match package.json (${packageVersion})`);
-    allMatch = false;
-  }
-  if (!allMatch) {
-    console.error('❌ Version mismatch detected. Please update all version references before releasing.');
-    process.exit(1);
-  } else {
-    console.log('✅ All versions are in sync!');
-  }
-} catch (error) {
-  console.error('❌ Error checking versions:', error.message);
-  process.exit(1);
+  fs.writeFileSync(readmePath, readmeContent, 'utf8');
+  console.log(`📝 Updated README.md version to ${packageVersion}`);
+  updated = true;
 }
 
-console.log('\nAll documentation and version checks passed. Ready for release!'); 
+// --- index.html ---
+const indexPath = path.join(__dirname, '..', 'index.html');
+let indexContent = fs.readFileSync(indexPath, 'utf8');
+const indexTitleMatch = indexContent.match(/Prototype V([\d.]+)/i);
+const indexFooterMatch = indexContent.match(/Prototype Version ([\d.]+)/i);
+const indexVersion = indexTitleMatch ? indexTitleMatch[1] : (indexFooterMatch ? indexFooterMatch[1] : 'NOT_FOUND');
+if (indexVersion !== packageVersion) {
+  indexContent = indexContent.replace(/Prototype V[\d.]+/i, `Prototype V${packageVersion}`);
+  indexContent = indexContent.replace(/Prototype Version [\d.]+/, `Prototype Version ${packageVersion}`);
+  fs.writeFileSync(indexPath, indexContent, 'utf8');
+  console.log(`📝 Updated index.html version to ${packageVersion}`);
+  updated = true;
+}
+
+// --- CHANGELOG.md ---
+const changelogPath = path.join(__dirname, '..', 'CHANGELOG.md');
+let changelogContent = fs.readFileSync(changelogPath, 'utf8');
+const changelogVersionMatch = changelogContent.match(/## \[([\d.]+)\]/);
+const changelogVersion = changelogVersionMatch ? changelogVersionMatch[1] : 'NOT_FOUND';
+if (changelogVersion !== packageVersion) {
+  // Insert a stub entry for the new version at the top
+  changelogContent = changelogContent.replace(
+    /(# Deadline Dread Changelog\n)/,
+    `$1\n## [${packageVersion}] - ${new Date().toISOString().slice(0, 10)}\n### Added\n- _Describe this release here_\n\n`
+  );
+  fs.writeFileSync(changelogPath, changelogContent, 'utf8');
+  console.log(`📝 Updated CHANGELOG.md version to ${packageVersion}`);
+  updated = true;
+}
+
+// --- Final Check ---
+const finalReadme = fs.readFileSync(readmePath, 'utf8');
+const finalIndex = fs.readFileSync(indexPath, 'utf8');
+const finalChangelog = fs.readFileSync(changelogPath, 'utf8');
+const finalReadmeVersion = finalReadme.match(/version-([^-]+)-green/)?.[1];
+const finalIndexVersion = finalIndex.match(/Prototype V([\d.]+)/i)?.[1] || finalIndex.match(/Prototype Version ([\d.]+)/)?.[1];
+const finalChangelogVersion = finalChangelog.match(/## \[([\d.]+)\]/)?.[1];
+
+if (
+  finalReadmeVersion === packageVersion &&
+  finalIndexVersion === packageVersion &&
+  finalChangelogVersion === packageVersion
+) {
+  console.log('\n✅ All versions are now in sync!');
+  process.exit(0);
+} else {
+  console.error('\n❌ Version mismatch remains after attempted update. Please check files manually.');
+  process.exit(1);
+} 
