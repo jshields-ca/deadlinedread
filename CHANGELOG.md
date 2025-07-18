@@ -1,5 +1,9 @@
 # Deadline Dread Changelog
 
+## [2.0.9] - 2024-07-18
+### Changed
+- Further improvements to the release workflow and documentation sync scripts to avoid versioning and release issues on all platforms.
+
 ## [2.0.6] - 2024-07-18
 ### Changed
 - Automated documentation and version reference sync in release workflow
