@@ -1,5 +1,9 @@
 # Deadline Dread Changelog
 
+## [2.0.1] - 2024-07-18
+### Fixed
+- Version sync and documentation updates for release workflow test
+
 ## [2.0.0] - 2024-07-18
 ### Major
 - **Full enemy, weapon, and upgrade system refactor** for modularity, balance, and extensibility

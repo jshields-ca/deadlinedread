@@ -142,7 +142,7 @@ See our [Development Workflow](https://linear.app/scootr-ca/document/deadline-dr
 
 ## 📈 Version History
 
-- **2.0.0** - Major refactor: enemy/weapon/upgrade system, new backgrounds, weapon limit, improved polish, and more
+- **2.0.1** - Minor fixes and version sync for release workflow test
 - **1.8.0** - New Buffer Overflow enemy with overflow mechanics
 - **1.7.5** - Level up system and player boundary fixes
 - **1.7.4** - UI improvements and footer updates
