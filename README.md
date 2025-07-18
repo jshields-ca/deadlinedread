@@ -1,6 +1,6 @@
 # 🎮 Deadline Dread
 
-[![Version](https://img.shields.io/badge/version-2.0.3-green.svg)](https://github.com/yourusername/deadlinedread/releases)
+[![Version](https://img.shields.io/badge/version-2.0.4-green.svg)](https://github.com/yourusername/deadlinedread/releases)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/jshields-ca/deadlinedread/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen.svg)](https://dev.scootr.ca/deadlinedread/)
