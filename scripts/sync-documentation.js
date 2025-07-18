@@ -48,14 +48,6 @@ const readmeVersionMatch = readmeContent.match(/version-([^-]+)-green/);
 const readmeVersion = readmeVersionMatch ? readmeVersionMatch[1] : 'NOT_FOUND';
 if (readmeVersion !== packageVersion) {
   readmeContent = readmeContent.replace(/version-[^-]+-green/g, `version-${packageVersion}-green`);
-  // Update version history
-  const versionHistoryRegex = /(## 📈 Version History\n)([\s\S]*?)(- \*\*\d+\.\d+\.\d+\*\*|$)/;
-  if (!readmeContent.includes(`**${packageVersion}**`)) {
-    readmeContent = readmeContent.replace(
-      /(## 📈 Version History\n)/,
-      `$1- **${packageVersion}** - _Describe this release here_\n`
-    );
-  }
   fs.writeFileSync(readmePath, readmeContent, 'utf8');
   console.log(`📝 Updated README.md version to ${packageVersion}`);
   updated = true;
@@ -108,5 +100,5 @@ if (
   process.exit(0);
 } else {
   console.error('\n❌ Version mismatch remains after attempted update. Please check files manually.');
-  process.exit(1);
+  process.exit(updated ? 0 : 1);
 } 

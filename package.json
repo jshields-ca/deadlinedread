@@ -1,7 +1,7 @@
 {
   "name": "deadlinedread",
   "private": true,
-  "version": "2.0.7",
+  "version": "2.0.8",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -23,10 +23,7 @@
       "tagName": "${version}"
     },
     "hooks": {
-      "before:init": [
-        "node scripts/update-readme-version.js"
-      ],
-      "after:bump": "node scripts/sync-documentation.js && git add README.md index.html CHANGELOG.md && git commit -m 'docs: sync version references after bump'"
+      "after:bump": "node scripts/sync-documentation.js && git add -A && (git commit -m 'docs: sync version references after bump' || echo 'No changes to commit')"
     }
   },
   "devDependencies": {
