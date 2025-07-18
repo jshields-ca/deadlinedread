@@ -51,13 +51,22 @@ class Player {
             this.lastMoveAngle = Math.atan2(moveY, moveX);
         }
         // Clamp player position to visible canvas area
-        if (typeof window !== 'undefined' && window.canvas) {
+        // Note: Canvas dimensions will be passed from main.js
+        if (this.canvasWidth && this.canvasHeight) {
             const minX = this.radius;
-            const maxX = window.canvas.width - this.radius;
+            const maxX = this.canvasWidth - this.radius;
             const minY = this.radius;
-            const maxY = window.canvas.height - this.radius;
+            const maxY = this.canvasHeight - this.radius;
+            
+            // Remove debug logs for clamping, canvas, boundaries, XP gain, and level up
+            // console.log(`🎮 Clamping player: x=${this.x.toFixed(1)}→${Math.max(minX, Math.min(maxX, this.x)).toFixed(1)}, y=${this.y.toFixed(1)}→${Math.max(minY, Math.min(maxY, this.y)).toFixed(1)}`);
+            // console.log(`🎮 Canvas: ${this.canvasWidth}x${this.canvasHeight}, Player radius: ${this.radius}`);
+            // console.log(`🎮 Boundaries: X(${minX}-${maxX}), Y(${minY}-${maxY})`);
+            
             this.x = Math.max(minX, Math.min(maxX, this.x));
             this.y = Math.max(minY, Math.min(maxY, this.y));
+        } else {
+            console.warn('🎮 No canvas dimensions set for player boundary clamping!');
         }
         this.activeWeapons.forEach(weapon => weapon.update(currentTime, enemies));
         if (playerHealthDisplay) playerHealthDisplay.textContent = `${Math.max(0, Math.ceil(this.health))} / ${Math.ceil(this.maxHealth)}`;
@@ -74,6 +83,8 @@ class Player {
     }
     gainXP(amount) {
         this.xp += amount * this.xpGainMultiplier;
+        // Remove debug logs for clamping, canvas, boundaries, XP gain, and level up
+        // console.log(`🎮 Gained ${amount} XP (${amount * this.xpGainMultiplier} with multiplier). Total XP: ${this.xp}/${this.xpToNextLevel}`);
         while (this.xp >= this.xpToNextLevel) {
             this.xp -= this.xpToNextLevel;
             this.levelUp();
@@ -83,7 +94,11 @@ class Player {
     levelUp() {
         this.level++;
         this.xpToNextLevel = Math.floor(this.xpToNextLevel * 1.15);
+        // Remove debug logs for clamping, canvas, boundaries, XP gain, and level up
+        // console.log(`🎮 Player leveled up to level ${this.level}! XP to next: ${this.xpToNextLevel}`);
         if (this.levelUpCallback) {
+            // Remove debug logs for clamping, canvas, boundaries, XP gain, and level up
+            // console.log('🎮 Calling levelUpCallback...');
             this.levelUpCallback();
         }
         // --- Add: call onLevelUp if defined ---
@@ -94,7 +109,14 @@ class Player {
     updateXpBar() {
         // This should be handled in main.js with DOM
     }
-    addWeapon(WeaponConstructor) { 
+    addWeapon(WeaponConstructor) {
+        // Prevent adding more than 4 weapons
+        if (this.activeWeapons.length >= 4) {
+            // Optionally, show a UI message here
+            // For now, just log
+            // console.warn('Weapon limit reached! Cannot add more than 4 weapons.');
+            return;
+        }
         if (typeof WeaponConstructor !== 'function') {
             console.error('addWeapon called with non-constructor:', WeaponConstructor);
             return;

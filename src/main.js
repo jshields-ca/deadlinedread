@@ -1,9 +1,8 @@
-console.log('HELLO FROM LIVE BUILD', new Date().toISOString());
-// Deadline Dread - Game Prototype V1.7.4
+// Deadline Dread - Game Prototype V1.8.0
 // Modularized version
 
 import Player from './player.js';
-import { Enemy, XPOrb, spawnEnemy } from './enemy.js';
+import { Enemy, XPOrb, spawnEnemy, Particle, Shockwave } from './enemy.js';
 import { Weapon, HomingWeapon, OrbitingWeapon, PulseWeapon, CodeSprayWeapon, Projectile } from './weapons.js';
 import { defineBaseUpgrades, baseAvailableUpgrades } from './upgrades.js';
 import * as config from './config.js';
@@ -16,6 +15,8 @@ let player;
 let enemies = [];
 let projectiles = [];
 let xpOrbs = [];
+let particles = []; // <-- Add global particles array
+let shockwaves = []; // <-- Add global shockwaves array
 let keys = {};
 let lastEnemySpawnTime = 0;
 let animationFrameId;
@@ -34,11 +35,92 @@ function updateTimerDisplay(timeInSeconds) {
     gameTimerDisplay.textContent = formatTime(timeInSeconds);
 }
 
+// --- Canvas Background Themes ---
+const BACKGROUND_THEMES = ['blueprint', 'code', 'circuit'];
+let currentBackgroundTheme = null;
+
+function drawBackground(ctx, width, height, theme, time) {
+    ctx.save();
+    // Base dark color
+    ctx.fillStyle = '#181c20';
+    ctx.fillRect(0, 0, width, height);
+    if (theme === 'blueprint') {
+        // Blueprint grid
+        ctx.strokeStyle = 'rgba(100,180,255,0.08)';
+        ctx.lineWidth = 1;
+        const gridSize = 40;
+        for (let x = 0; x < width; x += gridSize) {
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+        }
+        for (let y = 0; y < height; y += gridSize) {
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+        }
+        // Occasional sketch marks
+        ctx.strokeStyle = 'rgba(100,180,255,0.12)';
+        for (let i = 0; i < 6; i++) {
+            ctx.beginPath();
+            ctx.moveTo(Math.random() * width, Math.random() * height);
+            ctx.lineTo(Math.random() * width, Math.random() * height);
+            ctx.stroke();
+        }
+    } else if (theme === 'code') {
+        // Scrolling code
+        ctx.font = '14px monospace';
+        ctx.fillStyle = 'rgba(80,255,180,0.07)';
+        const codeLines = [
+            'function deadlineDread() {',
+            '  // Survive the backlog!',
+            '  let bugs = 999;',
+            '  while (player.alive) {',
+            '    fight(bugs);',
+            '    upgrade();',
+            '  }',
+            '}',
+            'console.log("Survive!");',
+            'if (scopeCreep) { features++; }',
+            'for (let i=0;i<enemies.length;i++) {...}',
+        ];
+        const scroll = (time / 40) % 30;
+        for (let i = 0; i < 12; i++) {
+            let y = ((i * 30) - scroll + height) % height;
+            ctx.fillText(codeLines[i % codeLines.length], 20, y + 30);
+        }
+    } else if (theme === 'circuit') {
+        // Circuit board traces
+        ctx.strokeStyle = 'rgba(0,255,128,0.10)';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 8; i++) {
+            let x = Math.random() * width;
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            for (let j = 0; j < 6; j++) {
+                x += (Math.random() - 0.5) * 60;
+                let y = (j + 1) * (height / 6) + Math.sin(time / 400 + i + j) * 8;
+                ctx.lineTo(Math.max(0, Math.min(width, x)), y);
+            }
+            ctx.stroke();
+        }
+        // Nodes
+        ctx.fillStyle = 'rgba(0,255,128,0.13)';
+        for (let i = 0; i < 18; i++) {
+            let x = Math.random() * width;
+            let y = Math.random() * height;
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+    ctx.restore();
+}
+
 // --- Game Logic ---
 function initializeGame() {
     resizeCanvas();
     defineBaseUpgrades();
     player = new Player(canvas.width / 2, canvas.height / 2, config.PLAYER_SIZE, 'cyan', config.INITIAL_PLAYER_HEALTH);
+    // Set canvas dimensions for player boundary clamping
+    player.canvasWidth = canvas.width;
+    player.canvasHeight = canvas.height;
     enemies = [];
     projectiles = [];
     xpOrbs = [];
@@ -56,6 +138,14 @@ function initializeGame() {
         if (xpBarElement) {
             xpBarElement.style.width = `${Math.min(100, 100 * (player.xp / player.xpToNextLevel))}%`;
         }
+    };
+    // Set up level up callback
+    player.levelUpCallback = function() {
+        // Update level display when player levels up
+        if (playerLevelDisplay) {
+            playerLevelDisplay.textContent = player.level;
+        }
+        setGameState('levelup');
     };
     // Weapon/projectile/XP orb helpers
     player.spawnProjectile = function(x, y, radius, color, angle, damage, speed, range) {
@@ -76,6 +166,42 @@ function initializeGame() {
     Object.keys(player.weaponStats).forEach(k => { if (k.length === 1) delete player.weaponStats[k]; });
 }
 
+function spawnHitParticles(x, y, color) {
+    for (let i = 0; i < 5; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 0.7 + Math.random() * 1.2;
+        const velocity = { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed };
+        const size = 2 + Math.random() * 2;
+        const lifetime = 120 + Math.random() * 80; // ms
+        particles.push(new Particle(x, y, color, size, velocity, lifetime));
+    }
+}
+function spawnDeathParticles(x, y, color) {
+    for (let i = 0; i < 10; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1.2 + Math.random() * 2.0;
+        const velocity = { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed };
+        const size = 2.5 + Math.random() * 3;
+        const lifetime = 200 + Math.random() * 200; // ms
+        particles.push(new Particle(x, y, color, size, velocity, lifetime));
+    }
+}
+
+function spawnTankDeathEffect(x, y, color) {
+    // Big burst: mix of tank color and white
+    for (let i = 0; i < 18; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1.5 + Math.random() * 2.5;
+        const velocity = { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed };
+        const size = 3 + Math.random() * 4;
+        const lifetime = 300 + Math.random() * 250; // ms
+        const c = (i % 3 === 0) ? '#fff' : color;
+        particles.push(new Particle(x, y, c, size, velocity, lifetime));
+    }
+    // Shockwave
+    shockwaves.push(new Shockwave(x, y, color, 80 + Math.random() * 40, 400));
+}
+
 function handleCollisions() {
     if (!player) return;
     // Homing Projectile vs Enemy
@@ -87,7 +213,15 @@ function handleCollisions() {
             if (!e) { enemies.splice(j,1); continue;}
             if (Math.hypot(p.x - e.x, p.y - e.y) < p.radius + e.radius) {
                 projectiles.splice(i, 1);
-                if (e.takeDamage(p.damage)) {
+                // --- Spawn hit particles ---
+                spawnHitParticles(e.x, e.y, e.color);
+                if (e.takeDamage(p.damage, enemies)) {
+                    // --- Spawn death particles ---
+                    if (e.type === 'Tank') {
+                        spawnTankDeathEffect(e.x, e.y, e.color);
+                    } else {
+                        spawnDeathParticles(e.x, e.y, e.color);
+                    }
                     xpOrbs.push(new XPOrb(e.x, e.y, config.XP_ORB_SIZE, '#76c7c0', config.XP_ORB_BASE_VALUE * e.xpMultiplier));
                     enemies.splice(j, 1);
                 }
@@ -100,7 +234,7 @@ function handleCollisions() {
         const e = enemies[i];
         if (!e) { enemies.splice(i,1); continue;}
         if (Math.hypot(player.x - e.x, player.y - e.y) < player.radius + e.radius) {
-            player.takeDamage(config.ENEMY_DAMAGE_TO_PLAYER, setGameState);
+            player.takeDamage(e.damage || config.ENEMY_DAMAGE_TO_PLAYER, setGameState);
             // Do NOT remove the enemy here
         }
     }
@@ -186,6 +320,10 @@ function displayLevelUpOptions() {
             if (player) upgrade.apply(player);
             if (player) player.updateXpBar();
             if (player) playerHealthDisplay.textContent = `${Math.max(0, Math.ceil(player.health))} / ${Math.ceil(player.maxHealth)}`;
+            // Update level display after upgrade
+            if (playerLevelDisplay && player) {
+                playerLevelDisplay.textContent = player.level;
+            }
             // --- Add: update level display after upgrade ---
             if (player && player.onLevelUp) player.onLevelUp();
             setGameState('playing');
@@ -239,15 +377,34 @@ function setGameState(newState) {
 
 function startGame() {
     initializeGame();
+    currentBackgroundTheme = BACKGROUND_THEMES[Math.floor(Math.random() * BACKGROUND_THEMES.length)];
     setGameState('playing');
 }
 
 function gameLoop(currentTime) {
     if (currentGameState !== 'playing') return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground(ctx, canvas.width, canvas.height, currentBackgroundTheme, currentTime);
     if (!lastEnemySpawnTime || currentTime - lastEnemySpawnTime > config.ENEMY_SPAWN_INTERVAL) {
         spawnEnemy(enemies, elapsedGameTime, canvas, player);
         lastEnemySpawnTime = currentTime;
+    }
+    // --- Draw and update shockwaves ---
+    for (let i = shockwaves.length - 1; i >= 0; i--) {
+        const s = shockwaves[i];
+        s.update(1);
+        s.draw(ctx);
+        if (s.isDone()) {
+            shockwaves.splice(i, 1);
+        }
+    }
+    // --- Draw and update particles ---
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update(1); // dt = 1 for ms-based lifetime
+        p.draw(ctx);
+        if (p.age >= p.lifetime) {
+            particles.splice(i, 1);
+        }
     }
     xpOrbs.forEach(orb => orb.draw(ctx));
     projectiles.forEach((p, i) => {
@@ -267,15 +424,21 @@ function gameLoop(currentTime) {
         player.draw(ctx);
         player.activeWeapons.forEach(w => w.draw(ctx));
     }
-    enemies.forEach(enemy => { if (player) enemy.update(player); enemy.draw(ctx); });
+    enemies.forEach(enemy => { if (player) enemy.update(player, enemies); enemy.draw(ctx); });
     handleCollisions();
     updateHUD(currentTime);
     animationFrameId = requestAnimationFrame(gameLoop);
 }
 
 function resizeCanvas() {
-    canvas.width = Math.min(window.innerWidth * 0.9, 900);
-    canvas.height = Math.min(window.innerHeight * 0.8, 700);
+    // Match canvas size to container size (800x600) instead of being larger
+    canvas.width = Math.min(window.innerWidth * 0.9, 800);
+    canvas.height = Math.min(window.innerHeight * 0.8, 600);
+    // Update player canvas dimensions if player exists
+    if (player) {
+        player.canvasWidth = canvas.width;
+        player.canvasHeight = canvas.height;
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

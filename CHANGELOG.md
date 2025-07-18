@@ -1,5 +1,26 @@
 # Deadline Dread Changelog
 
+## [1.8.0] - 2024-07-17
+### Added
+- **New Enemy: Buffer Overflow** - Fast, aggressive enemy that creates smaller "overflow" enemies when damaged
+  - Orange-red colored with animated "corrupted data" visual effects
+  - Overflows at 75%, 50%, and 25% health thresholds
+  - Each overflow creates 2-4 smaller, faster fragment enemies
+  - High XP reward (1.8x multiplier) for the challenge
+  - Spawns after 45 seconds of gameplay
+
+## [1.7.5] - 2024-07-17
+### Fixed
+- **Level Up System:** Fixed critical bug where level up screen was not appearing. Added proper levelUpCallback setup.
+- **Player Boundaries:** Fixed player movement to properly clamp to canvas boundaries instead of referencing undefined window.canvas.
+- **Enemy Spawning:** Increased enemy spawn distance from canvas edge (radius + 2 → radius + 20) to prevent spawning too close to player.
+- **Debug Logging:** Added console logs to help track XP gain and level up process.
+
+### Technical
+- Player now receives canvas dimensions for proper boundary clamping
+- Canvas resize function updates player boundaries when window is resized
+- Level up callback properly triggers the level up screen
+
 ## [1.7.4] - 2024-07-17
 ### Changed
 - UI update: Only 'Deadline Dread' at the top. Version, status, and links to GitHub and scootr.ca now appear in a smaller footer below the game.
