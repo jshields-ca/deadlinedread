@@ -146,12 +146,19 @@ See our [Development Workflow](https://linear.app/scootr-ca/document/deadline-dr
 
 ## 🤝 Contributing
 
-While this is primarily a personal project, suggestions and feedback are welcome! Feel free to:
+We welcome contributions and feedback! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on how to:
 
 - Report bugs or issues
 - Suggest new features or improvements
 - Share gameplay feedback
-- Fork and experiment with your own modifications
+- Contribute code (limited scope)
+- Help with documentation
+
+### Community Guidelines
+
+- **[Code of Conduct](CODE_OF_CONDUCT.md)** - Our community standards and expectations
+- **[Security Policy](SECURITY.md)** - How to report security vulnerabilities
+- **[Issue Templates](.github/ISSUE_TEMPLATE/)** - Structured feedback forms for different types of contributions
 
 ## 📄 License
 
@@ -161,6 +168,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **[Live Demo](https://dev.scootr.ca/deadlinedread/)**
 - **[Changelog](CHANGELOG.md)**
+- **[Contributing Guidelines](CONTRIBUTING.md)**
+- **[Code of Conduct](CODE_OF_CONDUCT.md)**
+- **[Security Policy](SECURITY.md)**
 - **[Project Planning](https://linear.app/scootr-ca/document/deadline-dread-development-plan-da18adc60a99)**
 - **[Author's Website](https://scootr.ca)**
 
