@@ -40,7 +40,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        # Use a unique artifact name to avoid conflicts on re-runs or parallel jobs
-        name: build-files-${{ github.run_id }}-${{ github.run_attempt }}
+        # Use a unique artifact name to avoid conflicts on re-runs, parallel jobs, and matrix builds
+        name: build-files-${{ matrix.node-version }}-${{ github.run_id }}-${{ github.run_attempt }}
         path: dist/
         retention-days: 7 
