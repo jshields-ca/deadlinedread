@@ -40,6 +40,7 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: build-files
+        # Use a unique artifact name to avoid conflicts on re-runs or parallel jobs
+        name: build-files-${{ github.run_id }}-${{ github.run_attempt }}
         path: dist/
         retention-days: 7 
