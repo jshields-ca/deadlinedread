@@ -1,126 +1,50 @@
 # Deadline Dread Changelog
 
-## [3.0.0-prototype] - 2024-07-18
+## [3.0.0] - 2024-07-18
 ### Changed
-- Reset all previous tags and releases to start fresh with a new prototype versioning scheme.
-- Improved and stabilized the release workflow and documentation sync scripts for a clean, reliable release process.
-- This release marks a new baseline for future development and testing.
-
-## [2.0.9] - 2024-07-18
-### Changed
-- Further improvements to the release workflow and documentation sync scripts to avoid versioning and release issues on all platforms.
-
-## [2.0.6] - 2024-07-18
-### Changed
-- Automated documentation and version reference sync in release workflow
-- Removed version history from README, now referenced in CHANGELOG only
-
-## [2.0.5] - 2024-07-18
-### Fixed
-- Version reference sync for release workflow
-- Unique artifact names in CI to prevent upload conflicts
-
-## [2.0.4] - 2024-07-18
-### Fixed
-- Version reference sync for release workflow
-
-## [2.0.3] - 2024-07-18
-### Fixed
-- Version reference sync for release workflow
-
-## [2.0.2] - 2024-07-18
-### Fixed
-- Version reference sync for release workflow
-
-## [2.0.1] - 2024-07-18
-### Fixed
-- Version sync and documentation updates for release workflow test
-
-## [2.0.0] - 2024-07-18
-### Major
-- **Full enemy, weapon, and upgrade system refactor** for modularity, balance, and extensibility
-- **Randomized, on-theme canvas backgrounds** (blueprint, code, circuit) for each run
-- **Weapon limit (4) for strategic builds**
-- **Improved particle effects** for hits, deaths, and Tank deaths (unique shockwave)
-- **Enhanced readability:** glow, borders, and dynamic text contrast for all enemies
-- **Polish:** removed debug logs, improved code comments, and more
-
-### Gameplay & Balance
-- Enemy damage now scales by type/size (Tank, Blob, Buffer Overflow, etc.)
-- Homing weapon projectile speed reduced by 30%
-- Mutated Standard and other enemy tweaks
+- **Clean Slate Release**: Reset all previous tags and releases to start fresh with a new versioning scheme.
+- **Workflow Improvements**: Stabilized release workflow and documentation sync scripts for reliable, automated releases.
+- **Line Ending Consistency**: Added .gitattributes to enforce consistent line endings across all platforms.
+- **Documentation Cleanup**: Removed version history from README.md, now centralized in CHANGELOG.md only.
 
 ### Technical
-- All stats centralized in config for easy balancing
-- Codebase ready for new weapons, upgrades, and backgrounds
-
-## [1.8.0] - 2024-07-17
-### Added
-- **New Enemy: Buffer Overflow** - Fast, aggressive enemy that creates smaller "overflow" enemies when damaged
-  - Orange-red colored with animated "corrupted data" visual effects
-  - Overflows at 75%, 50%, and 25% health thresholds
-  - Each overflow creates 2-4 smaller, faster fragment enemies
-  - High XP reward (1.8x multiplier) for the challenge
-  - Spawns after 45 seconds of gameplay
-
-## [1.7.5] - 2024-07-17
-### Fixed
-- **Level Up System:** Fixed critical bug where level up screen was not appearing. Added proper levelUpCallback setup.
-- **Player Boundaries:** Fixed player movement to properly clamp to canvas boundaries instead of referencing undefined window.canvas.
-- **Enemy Spawning:** Increased enemy spawn distance from canvas edge (radius + 2 → radius + 20) to prevent spawning too close to player.
-- **Debug Logging:** Added console logs to help track XP gain and level up process.
-
-### Technical
-- Player now receives canvas dimensions for proper boundary clamping
-- Canvas resize function updates player boundaries when window is resized
-- Level up callback properly triggers the level up screen
-
-## [1.7.4] - 2024-07-17
-### Changed
-- UI update: Only 'Deadline Dread' at the top. Version, status, and links to GitHub and scootr.ca now appear in a smaller footer below the game.
-
-## [1.7.3] - 2024-07-17
-### Fixed
-- Player is now clamped to the visible game area and cannot move outside the screen.
-- Enemies now spawn just outside the visible area (by their radius), not far outside, for all four edges.
-
-## [1.7.2] - 2024-07-17
-### Fixed
-- Weapons now work on live site (minification bug fixed with static weaponKey).
-- All debug logs removed for production.
-
-## [1.7.1]
-### Fixed
-- Defensive code for rogue weapon keys.
-- Upgrade choices always unique and relevant.
-- XP bar resets on restart.
-- Player damage cooldown bug fixed.
-- Audio and favicon errors fixed.
-
-## [1.7.0]
-### Added
-- New Weapon: Code Spray (shotgun-style, upgrades, range logic).
-- Scope Creep Blob enemy (splitting, visuals, sound).
-- Modularized codebase (player, enemy, weapons, upgrades, config).
-- Health UI always shows current/max health.
-- Level up system with callback for UI.
-- Enemy scaling with player level.
-- Homing weapon: smooth homing, speed balanced.
-- Code Spray: projectiles disappear after range, only fires if enemy in range.
-- Upgrade system: weapon upgrades weighted, only for unlocked weapons.
-
-### Changed
-- Player speed reduced for balance.
-- Weapon unlock upgrades set all relevant stats.
-
-### Fixed
-- Stat initialization for new weapons/upgrades.
-- Upgrades for locked weapons no longer appear.
-- Commit/push workflow clarified.
-
-## [1.6.5]
-- Previous stable version.
+- Automated version reference sync in release-it workflow
+- Robust sync script that handles version mismatches gracefully
+- Unique artifact names in CI/CD to prevent upload conflicts
+- Normalized line endings (LF) for cross-platform compatibility
 
 ---
 
-For a detailed summary of each release, see the project documentation or GitHub Releases. 
+## Previous Development History
+
+### Version 2.x Series (2024-07-18)
+**2.0.9** - Further improvements to release workflow and documentation sync scripts
+**2.0.8** - Automated documentation and version reference sync in release workflow
+**2.0.7** - Version reference sync for release workflow
+**2.0.6** - Automated documentation and version reference sync in release workflow
+**2.0.5** - Version reference sync and unique artifact names in CI
+**2.0.4** - Version reference sync for release workflow
+**2.0.3** - Version reference sync for release workflow
+**2.0.2** - Version reference sync for release workflow
+**2.0.1** - Minor fixes and version sync for release workflow test
+**2.0.0** - Major refactor: enemy/weapon/upgrade system, new backgrounds, weapon limit, improved polish
+
+### Version 1.x Series (2024-07-17)
+**1.8.0** - New Buffer Overflow enemy with overflow mechanics
+**1.7.5** - Level up system and player boundary fixes
+**1.7.4** - UI improvements and footer updates
+**1.7.3** - Player movement and enemy spawning fixes
+**1.7.2** - Critical weapon minification bug fix
+**1.7.1** - Various gameplay and UI fixes
+**1.7.0** - Major update: Code Spray weapon, Scope Creep Blob enemy, modular codebase
+
+### Key Features from Previous Versions
+- **Enemy Types**: Basic Bugs, Scope Creep Blob (splitting), Buffer Overflow (fragments), Feature Requests
+- **Weapons**: Homing Weapon, Orbiting Weapon, Pulse Weapon, Code Spray (shotgun-style)
+- **Visual**: Retro-style graphics, randomized canvas backgrounds (blueprint, code, circuit), particle effects
+- **Gameplay**: Survivor-style combat, progressive difficulty, level-up system, XP progression
+- **Technical**: Modular JavaScript codebase, Vite build system, automated releases
+
+---
+
+*This changelog preserves the complete development history while marking the start of a new, clean versioning scheme.* 
