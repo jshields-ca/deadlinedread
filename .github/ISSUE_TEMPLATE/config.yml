@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🎮 Play Deadline Dread
+    url: https://scootr.ca/deadlinedread
+    about: Play the latest version of the game
+  - name: 📖 Read the Documentation
+    url: https://github.com/jshields-ca/deadlinedread#readme
+    about: Learn more about the project and how to contribute 
