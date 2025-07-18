@@ -9,13 +9,17 @@ const __dirname = path.dirname(__filename);
 
 console.log('📚 Deadline Dread - Documentation Sync Helper');
 console.log('=============================================');
+console.log('🔄 Syncing version references across all documentation files...');
 
 const filesToCheck = [
   { path: 'README.md', description: 'Project README' },
   { path: 'CHANGELOG.md', description: 'Release changelog' },
   { path: 'package.json', description: 'Package configuration' },
   { path: 'LICENSE', description: 'MIT License' },
-  { path: 'index.html', description: 'Main HTML file' }
+  { path: 'index.html', description: 'Main HTML file' },
+  { path: 'CONTRIBUTING.md', description: 'Contributing guidelines' },
+  { path: 'CODE_OF_CONDUCT.md', description: 'Code of Conduct' },
+  { path: 'SECURITY.md', description: 'Security policy' }
 ];
 
 console.log('\n📋 Documentation Status:');
@@ -91,12 +95,22 @@ const finalReadmeVersion = finalReadme.match(/version-([^-]+)-green/)?.[1];
 const finalIndexVersion = finalIndex.match(/Prototype V([\d.]+)/i)?.[1] || finalIndex.match(/Prototype Version ([\d.]+)/)?.[1];
 const finalChangelogVersion = finalChangelog.match(/## \[([\d.]+)\]/)?.[1];
 
+console.log('\n📊 Version Status:');
+console.log(`📦 Package Version: ${packageVersion}`);
+console.log(`📖 README Version: ${finalReadmeVersion || 'NOT_FOUND'}`);
+console.log(`🌐 Index Version: ${finalIndexVersion || 'NOT_FOUND'}`);
+console.log(`📝 Changelog Version: ${finalChangelogVersion || 'NOT_FOUND'}`);
+
 if (
   finalReadmeVersion === packageVersion &&
   finalIndexVersion === packageVersion &&
   finalChangelogVersion === packageVersion
 ) {
   console.log('\n✅ All versions are now in sync!');
+  console.log('\n📚 Documentation files included in sync:');
+  filesToCheck.forEach(file => {
+    console.log(`   • ${file.path} - ${file.description}`);
+  });
   process.exit(0);
 } else {
   console.error('\n❌ Version mismatch remains after attempted update. Please check files manually.');
