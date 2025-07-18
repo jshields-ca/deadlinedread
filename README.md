@@ -1,6 +1,6 @@
 # 🎮 Deadline Dread
 
-[![Version](https://img.shields.io/badge/version-1.8.0-green.svg)](https://github.com/yourusername/deadlinedread/releases)
+[![Version](https://img.shields.io/badge/version-2.0.0-green.svg)](https://github.com/yourusername/deadlinedread/releases)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/yourusername/deadlinedread/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen.svg)](https://scootr.ca/deadlinedread/)
@@ -40,6 +40,9 @@ Deadline Dread is a web-based survivor/bullet hell game where you play as a deve
 ### 🎨 Visual & Audio
 - **Retro-style graphics** with developer-themed aesthetics
 - **Smooth animations** and particle effects
+- **Randomized, on-theme canvas backgrounds** for each run
+- **Weapon limit (4) for strategic builds**
+- **Enhanced readability:** glow, borders, and dynamic text contrast
 - **Responsive design** that adapts to screen size
 - **Dark theme** optimized for developer eyes
 
@@ -139,6 +142,7 @@ See our [Development Workflow](https://linear.app/scootr-ca/document/deadline-dr
 
 ## 📈 Version History
 
+- **2.0.0** - Major refactor: enemy/weapon/upgrade system, new backgrounds, weapon limit, improved polish, and more
 - **1.8.0** - New Buffer Overflow enemy with overflow mechanics
 - **1.7.5** - Level up system and player boundary fixes
 - **1.7.4** - UI improvements and footer updates

@@ -1,5 +1,23 @@
 # Deadline Dread Changelog
 
+## [2.0.0] - 2024-07-18
+### Major
+- **Full enemy, weapon, and upgrade system refactor** for modularity, balance, and extensibility
+- **Randomized, on-theme canvas backgrounds** (blueprint, code, circuit) for each run
+- **Weapon limit (4) for strategic builds**
+- **Improved particle effects** for hits, deaths, and Tank deaths (unique shockwave)
+- **Enhanced readability:** glow, borders, and dynamic text contrast for all enemies
+- **Polish:** removed debug logs, improved code comments, and more
+
+### Gameplay & Balance
+- Enemy damage now scales by type/size (Tank, Blob, Buffer Overflow, etc.)
+- Homing weapon projectile speed reduced by 30%
+- Mutated Standard and other enemy tweaks
+
+### Technical
+- All stats centralized in config for easy balancing
+- Codebase ready for new weapons, upgrades, and backgrounds
+
 ## [1.8.0] - 2024-07-17
 ### Added
 - **New Enemy: Buffer Overflow** - Fast, aggressive enemy that creates smaller "overflow" enemies when damaged
