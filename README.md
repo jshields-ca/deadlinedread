@@ -1,16 +1,16 @@
 # 🎮 Deadline Dread
 
-[![Version](https://img.shields.io/badge/version-2.0.1-green.svg)](https://github.com/yourusername/deadlinedread/releases)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/yourusername/deadlinedread/actions)
+[![Version](https://img.shields.io/badge/version-2.0.1-green.svg)](https://github.com/jshields-ca/deadlinedread/releases)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/jshields-ca/deadlinedread/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen.svg)](https://scootr.ca/deadlinedread/)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen.svg)](https://dev.scootr.ca/deadlinedread/)
 [![Made with Vite](https://img.shields.io/badge/made%20with-Vite-646CFF.svg)](https://vitejs.dev/)
 
 > A survivors-like bullet hell game set in a nightmarish world for web developers. Survive the onslaught of... 'features'!
 
 ## 🎯 Live Demo
 
-**[Play Deadline Dread Now](https://scootr.ca/deadlinedread/)**
+**[Play Deadline Dread Now](https://dev.scootr.ca/deadlinedread/)**
 
 ## 🎮 About
 
@@ -143,6 +143,7 @@ See our [Development Workflow](https://linear.app/scootr-ca/document/deadline-dr
 ## 📈 Version History
 
 - **2.0.1** - Minor fixes and version sync for release workflow test
+- **2.0.0** - Major refactor: enemy/weapon/upgrade system, new backgrounds, weapon limit, improved polish, and more
 - **1.8.0** - New Buffer Overflow enemy with overflow mechanics
 - **1.7.5** - Level up system and player boundary fixes
 - **1.7.4** - UI improvements and footer updates
@@ -168,13 +169,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- **[Live Demo](https://scootr.ca/deadlinedread/)**
+- **[Live Demo](https://dev.scootr.ca/deadlinedread/)**
 - **[Changelog](CHANGELOG.md)**
 - **[Project Planning](https://linear.app/scootr-ca/document/deadline-dread-development-plan-da18adc60a99)**
 - **[Author's Website](https://scootr.ca)**
 
 ---
 
-**Made with ❤️ for the developer community**
+**Made with ❤️ for the developer community from Winnipeg, MB, Canada**
 
 *Survive the backlog, one bug at a time!* 
