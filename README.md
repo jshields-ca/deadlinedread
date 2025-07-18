@@ -140,19 +140,9 @@ This project follows a structured development and release process:
 
 See our [Development Workflow](https://linear.app/scootr-ca/document/deadline-dread-development-and-release-workflow-0bde7df83629) for detailed process documentation.
 
-## 📈 Version History
+## �� Version History
 
-- **2.0.1** - Minor fixes and version sync for release workflow test
-- **2.0.0** - Major refactor: enemy/weapon/upgrade system, new backgrounds, weapon limit, improved polish, and more
-- **1.8.0** - New Buffer Overflow enemy with overflow mechanics
-- **1.7.5** - Level up system and player boundary fixes
-- **1.7.4** - UI improvements and footer updates
-- **1.7.3** - Player movement and enemy spawning fixes
-- **1.7.2** - Critical weapon minification bug fix
-- **1.7.1** - Various gameplay and UI fixes
-- **1.7.0** - Major update: Code Spray weapon, Scope Creep Blob enemy, modular codebase
-
-For detailed release notes, see [CHANGELOG.md](CHANGELOG.md).
+- For a complete version history and detailed release notes, see [CHANGELOG.md](CHANGELOG.md).
 
 ## 🤝 Contributing
 
