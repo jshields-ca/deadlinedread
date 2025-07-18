@@ -1,5 +1,27 @@
 # Deadline Dread Changelog
 
+## [2.0.6] - 2024-07-18
+### Changed
+- Automated documentation and version reference sync in release workflow
+- Removed version history from README, now referenced in CHANGELOG only
+
+## [2.0.5] - 2024-07-18
+### Fixed
+- Version reference sync for release workflow
+- Unique artifact names in CI to prevent upload conflicts
+
+## [2.0.4] - 2024-07-18
+### Fixed
+- Version reference sync for release workflow
+
+## [2.0.3] - 2024-07-18
+### Fixed
+- Version reference sync for release workflow
+
+## [2.0.2] - 2024-07-18
+### Fixed
+- Version reference sync for release workflow
+
 ## [2.0.1] - 2024-07-18
 ### Fixed
 - Version sync and documentation updates for release workflow test
